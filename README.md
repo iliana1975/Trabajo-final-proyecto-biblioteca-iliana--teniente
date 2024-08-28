@@ -91,16 +91,16 @@ El objetivo principal de la tabla categorias es organizar los libros en diferent
 
 #PROCEDIMIENTOS ALMACENADOS
 
-![image](https://github.com/user-attachments/assets/2135b591-3b29-4016-b0a0-70b64ffac482)
+![image](https://github.com/user-attachments/assets/a7c9e003-358e-4678-ae12-a2a30e3cbaf4)
 *El procedimiento almacenado sp_get_clientes() se ha diseñado para simplificar y centralizar el proceso de obtener todos los registros de la tabla clientes en una base de datos.
 
-![image](https://github.com/user-attachments/assets/ac1ae07f-a456-4de8-ad52-24249752beb8)
+![image](https://github.com/user-attachments/assets/c1517cd4-3f58-46d8-8ecd-046f58e8f65a)
 *El objetivo principal del procedimiento sp_get_editoriales() es proporcionar una manera eficiente, centralizada y consistente de recuperar todos los registros de la tabla editoriales en la base de datos, facilitando su uso y mantenimiento en aplicaciones o scripts.
 
-![image](https://github.com/user-attachments/assets/2c2a0232-45cc-4f78-8cfa-3e01a5498f9d)
+![image](https://github.com/user-attachments/assets/a80e9ad2-9c1e-49ac-ab91-87ad3400bcec)
 *El objetivo principal de sp_get_autores() es proporcionar una forma eficiente, centralizada y consistente de recuperar todos los registros de la tabla autores, simplificando el proceso de consulta y mejorando el mantenimiento y la seguridad en el acceso a los datos.
 
-![image](https://github.com/user-attachments/assets/2e49536f-0634-486a-8f76-6154b9287028)
+![image](https://github.com/user-attachments/assets/2d8e8e8c-3ddb-441a-b268-d444e2606a5e)
 *El objetivo principal de sp_get_libros() es proporcionar una manera eficiente, estandarizada y centralizada para recuperar todos los registros de la tabla libros, facilitando el acceso y el mantenimiento de los datos, mientras se asegura consistencia y seguridad en el proceso.
 
 #FUNCIONES
