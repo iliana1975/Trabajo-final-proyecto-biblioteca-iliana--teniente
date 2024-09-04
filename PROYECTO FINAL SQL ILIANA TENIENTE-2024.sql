@@ -298,64 +298,44 @@ SELECT * FROM vista_prestamos;
 
 -- Procedimientos almacenados
 
--- Procedimiento para obtener todos los clientes
-DROP PROCEDURE IF EXISTS sp_get_clientes;
+-- Procedimiento para obtener el porcetaje de ganancia por libro, 
+-- el mismo se ingresa por una variable de entrada id_libro 
+-- para hacer el calculo entre el porcentaje de venta y el costo del mismo, si el id ingresado no existe en la tabla 
+-- se le informa al cliente por pantalla
+
 
 DELIMITER //
 
-CREATE PROCEDURE sp_get_clientes()
+CREATE PROCEDURE sp_get_porcentaje_ganacias(in V_id_libros int, out V_porcentaje DECIMAL(15,2))
 BEGIN
-    SELECT * FROM clientes;
+declare existe int;
+declare V_precio_venta DECIMAL(15,2);
+declare V_costo DECIMAL(15,2);
+    SELECT id_libro, precio_venta_libro, costo_libro into existe, V_precio_venta, V_costo
+    FROM proyecto_biblioteca.venta_libros where id_libro = V_id_libros;
+    if existe is null then
+    SELECT 'ID DE libro no existe' AS OUTPUT FROM DUAL;
+    else 
+    set V_porcentaje  = 100 - ( ( V_costo * 100) / V_precio_venta);
+    end if;
 END //
 
 DELIMITER ;
+set @resultado = 0;
+call sp_get_porcentaje_ganacias (1, @resultado);
+select @resultado;
 
-CALL sp_get_clientes();
+select * from venta_libros;
 
--- Procedimiento para obtener todas las editoriales
-DROP PROCEDURE IF EXISTS sp_get_editoriales;
 
-DELIMITER //
-
-CREATE PROCEDURE sp_get_editoriales()
-BEGIN
-    SELECT * FROM editoriales;
-END //
-
-DELIMITER ;
-
-CALL sp_get_editoriales();
-
--- Procedimiento para obtener todos los autores
-DROP PROCEDURE IF EXISTS sp_get_autores;
-
-DELIMITER //
-
-CREATE PROCEDURE sp_get_autores()
-BEGIN
-    SELECT * FROM autores;
-END //
-
-DELIMITER ;
-
-CALL sp_get_autores();
-
--- Procedimiento para obtener todos los libros
-DROP PROCEDURE IF EXISTS sp_get_libros;
-
-DELIMITER //
-
-CREATE PROCEDURE sp_get_libros()
-BEGIN
-    SELECT * FROM libros;
-END //
-
-DELIMITER ;
-
-CALL sp_get_libros();
 
 -- Triggers
 -- Trigger para registrar inserciones en clientes
+
+-- se crea la tabla de registro_clientes para la inserción de los registros desde el trigger
+
+create table registro_clientes (id_cliente int, fecha_registro date);
+
 DELIMITER //
 
 CREATE TRIGGER tr_cliente_insert
@@ -369,16 +349,40 @@ END //
 
 DELIMITER ;
 
+INSERT INTO clientes (nombre, apellido, telefono, direccion, mail, nro_cliente) VALUES
+('Mariano', 'Ferro', '3512564789', 'Roberto 3451', 'm_f@hotmail.com', 1),
+('Octavio', 'Guzmán', '3514561289', 'Tablada 26', 'O_G@hotmail.com', 2);
+select * from registro_clientes;
+
 -- Trigger para actualizar la cantidad de libros en autores
+-- este trigger suma la cantidad de libros por autor , luego de insertar un registro en la tabla libros... 
+-- si el autor no tenia libros , se valida con un if , y se le carga un registro 
+-- y si ya tenia libros se va acumulando dependiendo de la inserción
+
+drop trigger after_insert_libros;
 DELIMITER $$
 
 CREATE TRIGGER after_insert_libros
 AFTER INSERT ON libros 
 FOR EACH ROW 
 BEGIN
+declare existe int;
+select cantidad_libros into existe from autores where id_autor = NEW.id_autor;
+if existe is null then 
+UPDATE autores
+    SET cantidad_libros = 1
+    WHERE id_autor = NEW.id_autor;
+    else
     UPDATE autores
     SET cantidad_libros = cantidad_libros + 1
     WHERE id_autor = NEW.id_autor;
+    end if;
 END $$
 
 DELIMITER ;
+INSERT INTO libros (titulo, id_autor, id_editorial, cantidad_libros) VALUES
+('Campo Argentino', 1, 1, 5),
+('Ruta Nueva', 1, 2, 3);
+
+
+select * from autores;
